@@ -1,0 +1,52 @@
+# --- Virtualenvs (any variant/backup) ---
+.venv/
+venv/
+env/
+.venv-backup/
+.venv-back-up/
+*venv*/
+*backup*/
+*back-up*/
+.python-version
+
+# --- Python caches / build artifacts ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# --- Model weights / caches (must NOT be committed, per challenge brief) ---
+models/
+*.bin
+*.pt
+*.ct2
+.cache/
+huggingface/
+pretrained_models/
+
+# --- Audio recordings / scratch ---
+samples/
+*.wav
+*.flac
+*.mp3
+*.ogg
+
+# --- Challenge materials (not project source) ---
+help_docs/
+*.docx
+
+# --- Editor / IDE ---
+.vscode/
+.idea/
+*.swp
+
+# --- OS cruft ---
+.DS_Store
+Thumbs.db

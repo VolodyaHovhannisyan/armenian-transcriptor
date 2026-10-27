@@ -1,0 +1,28 @@
+# Python deps for the live Armenian -> English transcriber.
+#
+# System prerequisite (not pip): PortAudio runtime, e.g. on Debian/Ubuntu:
+#     sudo apt install libportaudio2
+#
+# torch / torchaudio are CPU builds. Install them from the PyTorch CPU index:
+#     pip install torch==2.14.1 torchaudio==2.11.0 --index-url https://download.pytorch.org/whl/cpu
+# then install the rest with:
+#     pip install -r requirements.txt
+
+# Audio capture + terminal UI
+sounddevice==0.5.6
+numpy==2.2.6
+rich==15.0.0
+
+# VAD / endpointing
+silero-vad==6.2.3
+torch==2.14.1            # CPU build (see note above)
+
+# ASR (Armenian) + translation (hy->en), both on CTranslate2
+faster-whisper==1.2.1
+ctranslate2==4.8.4
+transformers==5.20.2
+sentencepiece==0.2.2
+
+# Speaker embeddings (ECAPA-TDNN)
+speechbrain==1.1.2
+torchaudio==2.11.0      # CPU build (see note above)
