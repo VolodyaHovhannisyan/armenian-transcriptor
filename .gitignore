@@ -3,7 +3,6 @@
 venv/
 env/
 .venv-backup/
-.venv-back-up/
 *venv*/
 *backup*/
 *back-up*/
