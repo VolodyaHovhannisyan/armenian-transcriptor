@@ -10,8 +10,13 @@ apart as `Speaker 1`, `Speaker 2`, … Everything runs **locally** — no cloud 
 or translation APIs.
 
 ```
-[00:00:03] Speaker 1  HY: Ողջույն, ես հիմա խոսում եմ հայերեն։   EN: Hello, I am speaking Armenian now.
-[00:00:07] Me         HY: Լավ եմ, շնորհակալություն։             EN: I'm fine, thank you.
+[00:00:03] Speaker 1
+HY: Ողջույն, ես հիմա խոսում եմ հայերեն։
+EN: Hello, I am speaking Armenian now.
+
+[00:00:07] Me
+HY: Լավ եմ, շնորհակալություն։
+EN: I'm fine, thank you.
 ```
 
 ---

@@ -140,10 +140,10 @@ class Transcriber:
     # ---- default output ------------------------------------------------
     def _default_print(self, r: Result) -> None:
         stamp = time.strftime("%H:%M:%S", time.gmtime(r.t_end - self._t0))
-        line = f"[{stamp}] {r.speaker:<9} HY: {r.hy}   EN: {r.en}"
+        line = f"[{stamp}] {r.speaker}\nHY: {r.hy}\nEN: {r.en}"
         if self.timing:
             latency = r.t_print - r.t_end
             flag = " soft-cut" if r.soft_cut else ""
-            line += (f"\n           (latency {latency:.2f}s | asr {r.asr_ms:.0f}ms "
+            line += (f"\n(latency {latency:.2f}s | asr {r.asr_ms:.0f}ms "
                      f"mt {r.mt_ms:.0f}ms spk {r.spk_ms:.0f}ms{flag})")
-        print(line, flush=True)
+        print(line + "\n", flush=True)
