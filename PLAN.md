@@ -1,11 +1,16 @@
 # Live Armenian → English Transcriber (terminal)
 
-> ## ⏸️ SESSION STATE — resume here
-> **Status:** Plan approved. **ALL 7 BUILD STEPS DONE & verified. Core feature-complete.**
-> Remaining (needs the user): live interview test with real 2-speaker Armenian audio; tune
-> `--speaker-threshold` on that audio; export Claude chats into `chats/`; `git init` + first
-> commit (not done — awaiting user). Files: config/audio/vad/asr/translate/speakers/pipeline/
-> main .py + bench_*.py + setup_models.sh + README.md + requirements.txt + .gitignore + chats/.
+> ## ✅ SESSION STATE — code complete
+> **Status:** Plan approved. **ALL 7 BUILD STEPS DONE, committed & verified. Core
+> feature-complete.** Chats exported into `chats/` (4 sessions). `git init` + commits DONE
+> (branch `main`, 3 commits). Re-verified end-to-end offline on the 3 sample clips: ASR
+> ~2.0–2.4 s + MT ~0.4–0.6 s compute (well under 5 s), translations understandable, speaker
+> clustering assigns stable labels.
+> **Remaining — both need the user's live hardware (can't be done headless):**
+>   1. Live 2-speaker Armenian interview test (speak into mic + play Armenian through speakers).
+>   2. Tune `--speaker-threshold` on that live audio (default 0.40).
+> Files: config/audio/vad/asr/translate/speakers/pipeline/main .py + bench_*.py +
+> setup_models.sh + README.md + requirements.txt + .gitignore + chats/.
 > Verified: dual capture; VAD on real clip; ASR R=0.25 (small model, cpu_threads=2); HY→EN
 > ~3.6 s < 5 s; speaker clustering (threshold 0.40); integrated pipeline produces labelled
 > HY+EN; `--run` clean startup/shutdown. **Models in `models/` (gitignored):
@@ -59,13 +64,15 @@
 > Verified: same-speaker merges, distinct splits, labels stable. Deps: `speechbrain` 1.1.2,
 > CPU `torchaudio` 2.11.0.
 >
-> **Next step on resume:** **Build step 6 — Integrate threaded pipeline.** `pipeline.py`:
-> capture→block queue→VAD thread→utterance queue→worker (speaker+ASR+MT)→printer; `main.py run`
-> with live output `[HH:MM:SS] Speaker N  HY: … EN: …`, `--timing` (measures t_print − t_end),
-> `--speaker-threshold`, graceful Ctrl-C, bounded-queue back-pressure. Then step 7 = README +
-> requirements + `chats/`.
-> **Deliverables not to forget:** README (setup, device setup, model rationale, limits) and a
-> `chats/` folder with full Claude transcripts; do **not** commit model weights.
+> **Build step 6 — threaded pipeline: DONE.** `pipeline.py`: capture→block queue→VAD
+> thread→utterance queue→single FIFO worker (speaker+ASR+MT)→printer. `main.py --run` with live
+> output `[HH:MM:SS] Speaker N / HY: … / EN: …`, `--timing` (reports t_print − t_end + per-stage
+> ms), `--speaker-threshold` (default 0.40), `--max-utterance`, graceful Ctrl-C, bounded
+> utterance queue (maxsize 16) that drops-to-stay-live under back-pressure.
+>
+> **Build step 7 — README + requirements + chats: DONE.** README covers setup, Linux device
+> setup, model rationale + trade-offs and honest limits; `requirements.txt` + `setup_models.sh`;
+> `chats/` holds the exported Claude transcripts. Model weights are gitignored (not committed).
 
 
 
