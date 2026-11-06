@@ -2,7 +2,7 @@
 derive the safe max-utterance length for the 5 s budget. Also prints the Armenian
 transcription so we can sanity-check quality.
 
-Usage: python bench_asr.py samples/hy_test.wav
+Usage: python bench_asr.py [samples/hy_test.wav] [small|turbo]
 """
 
 import sys
@@ -23,15 +23,15 @@ def max_utterance_len(R: float) -> float:
     return (BUDGET - SILENCE_ENDPOINT - MT_EST - EMBED_EST - SAFETY) / R
 
 
-def main(wav: str) -> int:
+def main(wav: str, model_name: str = "small") -> int:
     data, sr = audio_io.read_wav(wav)
     dur = len(data) / sr
-    print(f"clip: {wav}  duration={dur:.2f}s  sr={sr}\n")
+    print(f"clip: {wav}  duration={dur:.2f}s  sr={sr}  model={model_name}\n")
 
     for threads in (4, 2):
         print(f"=== cpu_threads={threads} ===")
         t_load = time.monotonic()
-        model = asr.ArmenianASR(cpu_threads=threads)
+        model = asr.ArmenianASR(model_name, cpu_threads=threads)
         model.warmup()  # exclude cold-start from timing
         print(f"  load+warmup: {time.monotonic() - t_load:.1f}s")
 
@@ -51,4 +51,6 @@ def main(wav: str) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main(sys.argv[1] if len(sys.argv) > 1 else "samples/hy_test.wav"))
+    wav = sys.argv[1] if len(sys.argv) > 1 else "samples/hy_test.wav"
+    model_name = sys.argv[2] if len(sys.argv) > 2 else "small"
+    raise SystemExit(main(wav, model_name))

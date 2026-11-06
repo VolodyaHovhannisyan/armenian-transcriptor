@@ -205,7 +205,8 @@ def cmd_vad(mic_sel: str | None, sys_sel: str | None) -> int:
     return 0
 
 
-def cmd_run(mic_sel, sys_sel, *, timing, speaker_threshold, max_utterance) -> int:
+def cmd_run(mic_sel, sys_sel, *, timing, speaker_threshold, max_utterance,
+            asr_model, mt_model) -> int:
     """Live transcription: capture both sources and print HY + EN per speaker."""
     import pipeline
 
@@ -215,13 +216,16 @@ def cmd_run(mic_sel, sys_sel, *, timing, speaker_threshold, max_utterance) -> in
         return 1
 
     print(f"Mic (Me)     : {mic_name}")
-    print(f"System (call): {sys_name}\n")
+    print(f"System (call): {sys_name}")
+    print(f"ASR model    : {asr_model}   MT model: {mt_model}\n")
 
     t = pipeline.Transcriber(
         mic_name, sys_name,
         speaker_threshold=speaker_threshold,
         max_utterance_s=max_utterance,
         timing=timing,
+        asr_model=asr_model,
+        mt_model=mt_model,
     )
     t.load_models()
     print("Listening. Speak Armenian / play the call audio. Ctrl-C to stop.\n")
@@ -256,6 +260,12 @@ def main(argv: list[str] | None = None) -> int:
                    help="cosine threshold for same-speaker on the system side (default 0.40)")
     p.add_argument("--max-utterance", type=float, default=8.0,
                    help="max seconds before an utterance is soft-cut (default 8)")
+    p.add_argument("--asr-model", default="small", choices=["small", "turbo"],
+                   help="ASR model: 'small' (~24%% WER, fast) or 'turbo' "
+                        "(large-v3-turbo-armenian, ~15%% WER). Default small.")
+    p.add_argument("--mt-model", default="600M", choices=["600M", "1.3B"],
+                   help="translation model: NLLB distilled 600M (fast) or 1.3B "
+                        "(better quality). Default 600M.")
     p.add_argument("--mic", help="mic source name or substring (default: system default)")
     p.add_argument("--system", help="system/monitor source name or substring "
                                      "(default: default sink monitor)")
@@ -272,7 +282,8 @@ def main(argv: list[str] | None = None) -> int:
     if args.run:
         return cmd_run(args.mic, args.system, timing=args.timing,
                        speaker_threshold=args.speaker_threshold,
-                       max_utterance=args.max_utterance)
+                       max_utterance=args.max_utterance,
+                       asr_model=args.asr_model, mt_model=args.mt_model)
     p.print_help()
     return 0
 
