@@ -41,10 +41,13 @@ class Result:
 class Transcriber:
     def __init__(self, mic_name: str, sys_name: str, *, speaker_threshold: float,
                  max_utterance_s: float = 8.0, timing: bool = False,
+                 asr_model: str = "small", mt_model: str = "600M",
                  on_result=None):
         self.mic_name = mic_name
         self.sys_name = sys_name
         self.timing = timing
+        self.asr_model = asr_model
+        self.mt_model = mt_model
         self.on_result = on_result or self._default_print
 
         self._block_q: "queue.Queue" = queue.Queue()
@@ -73,8 +76,8 @@ class Transcriber:
         import translate
 
         log("Loading models (ASR, translation, speaker ID)...")
-        self._asr = asr.ArmenianASR()
-        self._mt = translate.Translator()
+        self._asr = asr.ArmenianASR(self.asr_model)
+        self._mt = translate.Translator(self.mt_model)
         self._spk = speakers.SpeakerIdentifier(threshold=self._speaker_threshold)
         for tag in (config.SOURCE_ME, config.SOURCE_SYSTEM):
             self._segmenters[tag] = vad.StreamingVAD(

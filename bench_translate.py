@@ -1,6 +1,6 @@
 """ASR + MT end-to-end on a clip: print HY + EN and the latency breakdown.
 
-Usage: python bench_translate.py samples/hy_test.wav
+Usage: python bench_translate.py [samples/hy_test.wav] [small|turbo] [600M|1.3B]
 """
 
 import sys
@@ -11,14 +11,14 @@ import asr
 import translate
 
 
-def main(wav: str) -> int:
+def main(wav: str, asr_model: str = "small", mt_model: str = "600M") -> int:
     data, sr = audio_io.read_wav(wav)
     dur = len(data) / sr
-    print(f"clip: {wav}  duration={dur:.2f}s\n")
+    print(f"clip: {wav}  duration={dur:.2f}s  asr={asr_model}  mt={mt_model}\n")
 
     t = time.monotonic()
-    a = asr.ArmenianASR()
-    m = translate.Translator()
+    a = asr.ArmenianASR(asr_model)
+    m = translate.Translator(mt_model)
     a.warmup(); m.warmup()
     print(f"load+warmup: {time.monotonic() - t:.1f}s\n")
 
@@ -33,4 +33,7 @@ def main(wav: str) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main(sys.argv[1] if len(sys.argv) > 1 else "samples/hy_test.wav"))
+    wav = sys.argv[1] if len(sys.argv) > 1 else "samples/hy_test.wav"
+    asr_model = sys.argv[2] if len(sys.argv) > 2 else "small"
+    mt_model = sys.argv[3] if len(sys.argv) > 3 else "600M"
+    raise SystemExit(main(wav, asr_model, mt_model))
